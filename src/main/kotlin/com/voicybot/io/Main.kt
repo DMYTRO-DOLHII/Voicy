@@ -12,13 +12,11 @@ fun main() {
     val bot = bot {
         token = "5724558538:AAFvGQy2lh6s6uiQ7NxVl-u_DChyoID15Jk"
         dispatch {
-            message(Filter.Text){
+            message(Filter.Text or Filter.Command){
+                println(message.text.toString())
                 bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = message.text.toString())
             }
 
-//            command("start") {
-//                val result = bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = "Penis!")
-//            }
         }
     }
     bot.startPolling()

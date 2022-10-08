@@ -10,6 +10,7 @@ class User(
 
 
 
+
     private var voiceStorage = VoiceStorage()
 
     public fun addVoice(voice: Voice){
