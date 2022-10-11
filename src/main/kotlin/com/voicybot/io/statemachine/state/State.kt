@@ -7,10 +7,13 @@ enum class State {
     HANDLE_COMMAND,
 
     ADD_VOICE,
+    GET_VOICE,
     CALL_VOICE,
 
-    TEG_VOICE,
+    TAG_VOICE,
+    GET_TAGS,
 
+    ERROR,
 
-    END
+    EXECUTION_END
 }

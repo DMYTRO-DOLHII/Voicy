@@ -1,5 +1,7 @@
 package com.voicybot.io.bot
 
+import com.voicybot.io.statemachine.StateMachine
+import com.voicybot.io.statemachine.state.State
 import com.voicybot.io.storage.VoiceStorage
 
 class User(
@@ -9,9 +11,10 @@ class User(
     private var lastName: String) {
 
 
-
-
     private var voiceStorage = VoiceStorage()
+    private var stateMachine = StateMachine()
+    private lateinit var state: State
+
 
     public fun addVoice(voice: Voice){
         voiceStorage.add(voice)
