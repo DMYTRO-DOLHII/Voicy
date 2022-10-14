@@ -8,7 +8,7 @@ import com.voicybot.io.statemachine.state.State
 class AddVoice: Applier {
     override fun apply(bot: Bot, message: Message): State? {
         if(message.text.toString() == "/addvoice"){
-            bot.sendMessage(ChatId.fromId(message.chat.id), "Send me a voice/audio")
+            bot.sendMessage(ChatId.fromId(message.chat.id), "Send me a voice/audio or link on this voice(YouTube or TikTok)")
 
             return State.ADD_VOICE
         }

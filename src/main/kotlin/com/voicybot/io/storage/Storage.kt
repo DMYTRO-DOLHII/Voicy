@@ -1,19 +1,19 @@
 package com.voicybot.io.storage
 
-abstract class Storage<T> {
+abstract class Storage<K, V> {
 
-    private var storage = mutableListOf<T>()
+    private var storage = mutableMapOf<K, V>()
 
-    public fun add(el: T) {
-        storage.add(el)
+    public fun add(key: K, value: V) {
+        storage[key] = value
     }
 
-    public fun delete(i: Int): T? {
-        return storage.removeAt(i)
+    public fun delete(key: K): V? {
+        return storage.remove(key)
     }
 
-    public fun get(i: Int): T? {
-        return storage[i]
+    public fun get(key: K): V? {
+        return storage[key]
     }
 
 }

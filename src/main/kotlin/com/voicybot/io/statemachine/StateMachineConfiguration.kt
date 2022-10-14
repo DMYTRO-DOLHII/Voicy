@@ -8,7 +8,7 @@ class StateMachineConfiguration {
     private var transactions = mutableMapOf<State, List<State>>()
     private var handlers = mutableMapOf<State, Applier>()
 
-    public fun setUpState(state: State, applier: Applier, nextStates: List<State>){
+    public fun setUpState(state: State, applier: Applier?, nextStates: List<State>){
         transactions[state] = nextStates
         handlers[state] = applier
     }

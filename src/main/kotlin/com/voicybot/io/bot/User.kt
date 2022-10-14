@@ -1,30 +1,32 @@
 package com.voicybot.io.bot
 
+import com.github.kotlintelegrambot.entities.Message
 import com.voicybot.io.statemachine.StateMachine
-import com.voicybot.io.statemachine.state.State
 import com.voicybot.io.storage.VoiceStorage
 
 class User(
-    private var id: String,
+    private var id: Long,
     private var username: String,
     private var firstName: String,
     private var lastName: String) {
 
 
-    private var voiceStorage = VoiceStorage()
-    private var stateMachine = StateMachine()
-    private lateinit var state: State
+    private var voiceStorage: VoiceStorage = VoiceStorage()
+    private var stateMachine: StateMachine = StateMachine()
 
-
-    public fun addVoice(voice: Voice){
-        voiceStorage.add(voice)
+    public fun run(message: Message): String{
+        return stateMachine.execute(message)
     }
 
-    public fun deleteVoice(i: Int) : Voice? {
-        return voiceStorage.delete(i)
+    public fun addVoice(key:Long, voice: Voice){
+        voiceStorage.add(key, voice)
     }
 
-    public fun getId(): String{
+    public fun deleteVoice(key: Long) : Voice? {
+        return voiceStorage.delete(key)
+    }
+
+    public fun getId(): Long{
         return id
     }
 
