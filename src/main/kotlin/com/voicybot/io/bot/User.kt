@@ -1,5 +1,6 @@
 package com.voicybot.io.bot
 
+import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.Message
 import com.voicybot.io.statemachine.StateMachine
 import com.voicybot.io.storage.VoiceStorage
@@ -14,8 +15,20 @@ class User(
     private var voiceStorage: VoiceStorage = VoiceStorage()
     private var stateMachine: StateMachine = StateMachine()
 
-    public fun run(message: Message): String{
-        return stateMachine.execute(message)
+    private var handlingVoice = Voice()
+
+    public fun run(message: Message, bot: Bot){
+        val result = stateMachine.execute(message, bot)
+
+        if(result != ""){
+            val isReady = handlingVoice.prepare(result)
+
+            if(isReady){
+                voiceStorage.add(handlingVoice.getId(), handlingVoice)
+
+                handlingVoice = Voice()
+            }
+        }
     }
 
     public fun addVoice(key:Long, voice: Voice){

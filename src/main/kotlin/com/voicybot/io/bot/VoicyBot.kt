@@ -35,10 +35,7 @@ class VoicyBot(private var TOKEN: String) {
                 }
 
                 message(Filter.Text or Filter.Command){
-                    bot.sendMessage(
-                        ChatId.fromId(message.chat.id),
-                        users.get(message.chat.id)!!.run(message)
-                    )
+                    users.get(message.chat.id)!!.run(message, bot)
                 }
             }
         }
