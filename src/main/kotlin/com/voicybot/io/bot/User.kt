@@ -17,8 +17,8 @@ class User(
 
     private var handlingVoice = Voice()
 
-    public fun run(message: Message, bot: Bot){
-        val result = stateMachine.execute(message, bot)
+    public fun run(bot: Bot, message: Message){
+        val result = stateMachine.execute(bot, message)
 
         if(result != ""){
             val isReady = handlingVoice.prepare(result)

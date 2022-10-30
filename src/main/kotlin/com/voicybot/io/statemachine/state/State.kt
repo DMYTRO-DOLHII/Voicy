@@ -2,6 +2,8 @@ package com.voicybot.io.statemachine.state
 
 enum class State {
 
+    INITIAL,
+
     START,
 
     ADD_VOICE,

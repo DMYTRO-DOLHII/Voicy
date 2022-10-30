@@ -18,7 +18,6 @@ class VoicyBot(private var TOKEN: String) {
     public fun createBot(): Bot{
         return bot {
             token = TOKEN
-            logLevel = LogLevel.Network.Body
 
             dispatch {
                 command("start"){
@@ -29,13 +28,15 @@ class VoicyBot(private var TOKEN: String) {
                                 message.chat.username.toString(),
                                 message.chat.firstName.toString(),
                                 message.chat.lastName.toString()))
+
+                        println("User " + message.chat.id +  "was added")
                     }
 
-                    bot.sendMessage(ChatId.fromId(message.chat.id), "")
                 }
 
                 message(Filter.Text or Filter.Command){
-                    users.get(message.chat.id)!!.run(message, bot)
+                    println("Trying to handle message or command...")
+                    users.get(message.chat.id)!!.run(bot, message)
                 }
             }
         }
