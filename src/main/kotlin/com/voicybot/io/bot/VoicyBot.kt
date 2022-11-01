@@ -3,8 +3,7 @@ package com.voicybot.io.bot
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
-import com.github.kotlintelegrambot.dispatcher.command
-import com.github.kotlintelegrambot.dispatcher.inlineQuery
+import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.dispatcher.message
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InlineQueryResult
@@ -24,6 +23,7 @@ class VoicyBot(private var TOKEN: String) {
 
             dispatch {
                 inlineQuery {
+                    println("-------------")
                     println("Handling inline query")
                     val query: String = inlineQuery.query.trim()
                     if (query.isNotEmpty()) {
@@ -50,9 +50,27 @@ class VoicyBot(private var TOKEN: String) {
 
                 }
 
-                message(Filter.Text or Filter.Command or Filter.Audio) {
-                    println("----------------------------------")
-                    println("Handling ${message.text}")
+                text {
+                    println("-------------")
+                    println("Handling text")
+                    users.get(message.chat.id)!!.run(bot, message)
+                }
+
+                message(Filter.Command) {
+                    println("-------------")
+                    println("Handling command")
+                    users.get(message.chat.id)!!.run(bot, message)
+                }
+
+                audio {
+                    println("-------------")
+                    println("Handling audio")
+                    users.get(message.chat.id)!!.run(bot, message)
+                }
+
+                voice {
+                    println("-------------")
+                    println("Handling invoice")
                     users.get(message.chat.id)!!.run(bot, message)
                 }
             }
