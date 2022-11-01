@@ -48,7 +48,7 @@ class StateMachine {
 
     public fun execute(bot: Bot, message: Message): String {
 
-        println("User ${message.chat.id} now in ${current} state")
+        println("User ${message.chat.id} last state is ${current}")
 
         val result = tryToApply(bot, message, current)
 
@@ -58,7 +58,7 @@ class StateMachine {
             current = result.getState()
         }
 
-        println("User ${message.chat.id} has new ${current} state")
+        println("User ${message.chat.id} new state is ${current} ")
 
         return result!!.getContent()
     }
