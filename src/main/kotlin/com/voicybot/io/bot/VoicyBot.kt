@@ -17,35 +17,44 @@ class VoicyBot(private var TOKEN: String) {
 
     private var users: UserStorage = UserStorage()
 
-    public fun createBot(): Bot{
+    public fun createBot(): Bot {
         return bot {
             token = TOKEN
 
             dispatch {
                 inlineQuery {
                     println("-------------")
-                    println("Handling inline query")
+                    println("Handling inline query for user ${inlineQuery.from.id}")
                     val query: String = inlineQuery.query.trim()
-                    if (query.isNotEmpty()) {
-//                        val tags = query.split(' ')
-//                        val result: List<InlineQueryResult.CachedVoice> = voiceStorage.query(inlineQuery.from.id, tags)
-//                            .map { InlineQueryResult.CachedVoice(it.fileId, it.fileUniqueId, it.name) }
-//                        bot.answerInlineQuery(inlineQuery.id, result, cacheTime = 0)
+                    if (query.isEmpty()) {
+                        println("IsEmpty")
+                        val res: MutableList<InlineQueryResult.CachedVoice> = mutableListOf<InlineQueryResult.CachedVoice>()
+                        var i = 0
+
+                        println(users.get(inlineQuery.from.id)!!.getVoices().getStorage())
+
+                        val result: List<InlineQueryResult.CachedVoice> = res
+
+                        bot.answerInlineQuery(inlineQuery.id, result, cacheTime = 0)
                     } else {
+                        println("Isn'tEmpty")
                         bot.answerInlineQuery(inlineQuery.id, listOf())
                     }
                 }
 
-                command("start"){
-                    if(users.get(message.chat.id) == null){
+                command("start") {
+                    if (users.get(message.chat.id) == null) {
                         users.add(
                             message.chat.id,
-                            User(message.chat.id,
+                            User(
+                                message.chat.id,
                                 message.chat.username.toString(),
                                 message.chat.firstName.toString(),
-                                message.chat.lastName.toString()))
+                                message.chat.lastName.toString()
+                            )
+                        )
 
-                        println("User " + message.chat.id +  " was added")
+                        println("User " + message.chat.id + " was added")
                     }
 
                 }

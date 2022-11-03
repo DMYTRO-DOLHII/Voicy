@@ -2,27 +2,26 @@ package com.voicybot.io.bot
 
 class Voice() {
 
-    private var id: Long = 0
-    private lateinit var name: String
+    private var id: String = ""
+    private var name: String = ""
     private var tags = mutableListOf<String>()
 
     public fun prepare(content: String): Boolean {
-        if (id == 0L) {
-            setId(content.toLong())
+        if (id == "") {
+            setId(content)
         } else if (name == "") {
             setName(content)
-
             return true
         }
 
         return false
     }
 
-    private fun setId(id: Long) {
+    private fun setId(id: String) {
         this.id = id
     }
 
-    public fun getId(): Long {
+    public fun getId(): String {
         return id
     }
 

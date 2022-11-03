@@ -20,6 +20,7 @@ class User(
     public fun run(bot: Bot, message: Message){
         val result = stateMachine.execute(bot, message)
 
+
         if(result != ""){
             val isReady = handlingVoice.prepare(result)
 
@@ -53,5 +54,9 @@ class User(
 
     public fun getLastName(): String{
         return lastName
+    }
+
+    public fun getVoices(): VoiceStorage{
+        return voiceStorage
     }
 }

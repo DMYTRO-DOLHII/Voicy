@@ -16,4 +16,8 @@ abstract class Storage<K, V> {
         return storage[key]
     }
 
+    public fun getStorage() : Map<K, V>{
+        return storage
+    }
+
 }
