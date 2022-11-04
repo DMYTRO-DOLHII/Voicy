@@ -31,13 +31,16 @@ class VoicyBot(private var TOKEN: String) {
                         val res: MutableList<InlineQueryResult.CachedVoice> = mutableListOf<InlineQueryResult.CachedVoice>()
                         var i = 0
 
-                        println(users.get(inlineQuery.from.id)!!.getVoices().getStorage())
+                        for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()){
+                            res.add(i, InlineQueryResult.CachedVoice(i.toString(), voice.key.toString(), voice.value.getName()))
+                            i++
+                        }
 
                         val result: List<InlineQueryResult.CachedVoice> = res
 
                         bot.answerInlineQuery(inlineQuery.id, result, cacheTime = 0)
                     } else {
-                        println("Isn'tEmpty")
+                        println("Isn't Empty")
                         bot.answerInlineQuery(inlineQuery.id, listOf())
                     }
                 }

@@ -32,11 +32,11 @@ class User(
         }
     }
 
-    public fun addVoice(key:Long, voice: Voice){
+    public fun addVoice(key:String, voice: Voice){
         voiceStorage.add(key, voice)
     }
 
-    public fun deleteVoice(key: Long) : Voice? {
+    public fun deleteVoice(key: String) : Voice? {
         return voiceStorage.delete(key)
     }
 
