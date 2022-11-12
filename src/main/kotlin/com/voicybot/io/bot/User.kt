@@ -9,7 +9,8 @@ class User(
     private var id: Long,
     private var username: String,
     private var firstName: String,
-    private var lastName: String) {
+    private var lastName: String
+) {
 
 
     private var voiceStorage: VoiceStorage = VoiceStorage()
@@ -17,46 +18,28 @@ class User(
 
     private var handlingVoice = Voice()
 
-    public fun run(bot: Bot, message: Message){
-        val result = stateMachine.execute(bot, message)
-
-
-        if(result != ""){
-            val isReady = handlingVoice.prepare(result)
-
-            if(isReady){
-                voiceStorage.add(handlingVoice.getId(), handlingVoice)
-
-                handlingVoice = Voice()
-            }
-        }
+    public fun run(bot: Bot, message: Message) {
+        stateMachine.execute(bot, message, voiceStorage)
     }
 
-    public fun addVoice(key:String, voice: Voice){
-        voiceStorage.add(key, voice)
-    }
 
-    public fun deleteVoice(key: String) : Voice? {
-        return voiceStorage.delete(key)
-    }
-
-    public fun getId(): Long{
+    public fun getId(): Long {
         return id
     }
 
-    public fun getUsername(): String{
+    public fun getUsername(): String {
         return username
     }
 
-    public fun getFirstName(): String{
+    public fun getFirstName(): String {
         return firstName
     }
 
-    public fun getLastName(): String{
+    public fun getLastName(): String {
         return lastName
     }
 
-    public fun getVoices(): VoiceStorage{
+    public fun getVoices(): VoiceStorage {
         return voiceStorage
     }
 }

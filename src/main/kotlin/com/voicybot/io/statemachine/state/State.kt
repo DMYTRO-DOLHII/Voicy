@@ -13,6 +13,10 @@ enum class State {
     TAG_VOICE,
     GET_TAGS,
 
+    DELETE_VOICE,
+    DELETE_GET_VOICE,
+
+
     ERROR,
 
     EXECUTION_END
