@@ -28,11 +28,15 @@ class VoicyBot(private var TOKEN: String) {
                     val query: String = inlineQuery.query.trim()
                     if (query.isEmpty()) {
                         println("IsEmpty")
-                        val res: MutableList<InlineQueryResult.CachedVoice> = mutableListOf<InlineQueryResult.CachedVoice>()
+                        val res: MutableList<InlineQueryResult.CachedVoice> =
+                            mutableListOf<InlineQueryResult.CachedVoice>()
                         var i = 0
 
-                        for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()){
-                            res.add(i, InlineQueryResult.CachedVoice(i.toString(), voice.key.toString(), voice.value.getName()))
+                        for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()) {
+                            res.add(
+                                i,
+                                InlineQueryResult.CachedVoice(i.toString(), voice.key.toString(), voice.value.getName())
+                            )
                             i++
                         }
 
@@ -63,9 +67,11 @@ class VoicyBot(private var TOKEN: String) {
                 }
 
                 text {
-                    println("-------------")
-                    println("Handling text")
-                    users.get(message.chat.id)!!.run(bot, message)
+                    if (!message.text.toString().startsWith("/")) {
+                        println("-------------")
+                        println("Handling text")
+                        users.get(message.chat.id)!!.run(bot, message)
+                    }
                 }
 
                 message(Filter.Command) {

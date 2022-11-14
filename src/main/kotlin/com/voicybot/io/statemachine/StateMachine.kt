@@ -26,7 +26,7 @@ class StateMachine {
         configuration.setUpState(
             State.START,
             Start(),
-            listOf(State.ADD_VOICE, State.TAG_VOICE, State.DELETE_VOICE)
+            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
         )
 
         configuration.setUpState(
@@ -44,7 +44,7 @@ class StateMachine {
         configuration.setUpState(
             State.CALL_VOICE,
             CallVoice(),
-            listOf(State.ADD_VOICE, State.TAG_VOICE, State.DELETE_VOICE)
+            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
         )
 
         configuration.setUpState(
@@ -56,7 +56,7 @@ class StateMachine {
         configuration.setUpState(
             State.DELETE_GET_VOICE,
             DeleteGetVoice(),
-            listOf(State.ADD_VOICE, State.TAG_VOICE, State.DELETE_VOICE)
+            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
         )
 
 
@@ -72,17 +72,20 @@ class StateMachine {
             bot.sendMessage(ChatId.fromId(message.chat.id), "Sorry, but it is now available now!")
         } else {
             current = result.getState()
-            outputExecutor.execute(result, storage)
+            outputExecutor.execute(bot, result, storage)
         }
 
         println("User ${message.chat.id} new state is $current ")
     }
 
     private fun tryToApply(bot: Bot, message: Message, current: State): ExecutionOutput? {
+        println("All next stages : ${configuration.getNextStates(current)}")
         for (next: State in configuration.getNextStates(current)) {
+
+            println("Current next state is $next")
             val res = configuration.getApplier(next).apply(bot, message)
 
-            if (res!!.getState() != null) {
+            if (res != null) {
                 return res
             }
         }
