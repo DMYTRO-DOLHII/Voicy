@@ -31,10 +31,15 @@ class OutputExecutor {
                 text = "Your stickers : ",
                 replyMarkup = inlineKeyboardMarkup
             )
+
+            // TODO delete after problem will be solved
+            for ((key , value) in storage.getStorage()) println("$key : ${value.getName()}")
         }
 
         if (output.getState() == State.DELETE_GET_VOICE) {
-            storage.delete(output.getContent())
+            val key = storage.getKey(output.getContent())
+            val value = storage.get(key!!)
+            storage.delete(key, value!!)
         }
 
         if (output.getContent() != "") {

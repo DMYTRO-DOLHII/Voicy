@@ -6,6 +6,7 @@ import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.dispatcher.message
 import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.entities.Message
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InlineQueryResult
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InputMessageContent
 import com.github.kotlintelegrambot.extensions.filters.Filter
@@ -90,6 +91,12 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling invoice")
                     users.get(message.chat.id)!!.run(bot, message)
+                }
+
+                callbackQuery {
+                    println("-------------")
+                    println("Handling callbackQuery")
+                    users.get(callbackQuery.from.id)!!.run(bot, callbackQuery.message!!)
                 }
             }
         }
