@@ -5,12 +5,14 @@ import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Message
 import com.voicybot.io.statemachine.applier.*
 import com.voicybot.io.statemachine.state.State
+import com.voicybot.io.storage.VoiceStorage
 import kotlin.math.log
 
 class StateMachine {
 
     private var configuration: StateMachineConfiguration = StateMachineConfiguration()
     private var current: State
+    private var outputExecutor = OutputExecutor()
 
     init {
         current = State.INITIAL
@@ -24,7 +26,7 @@ class StateMachine {
         configuration.setUpState(
             State.START,
             Start(),
-            listOf(State.ADD_VOICE, State.TAG_VOICE)
+            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
         )
 
         configuration.setUpState(
@@ -42,13 +44,27 @@ class StateMachine {
         configuration.setUpState(
             State.CALL_VOICE,
             CallVoice(),
-            listOf(State.ADD_VOICE, State.TAG_VOICE)
+            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
         )
+
+        configuration.setUpState(
+            State.DELETE_VOICE,
+            DeleteVoice(),
+            listOf(State.DELETE_GET_VOICE)
+        )
+
+        configuration.setUpState(
+            State.DELETE_GET_VOICE,
+            DeleteGetVoice(),
+            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
+        )
+
+
     }
 
-    public fun execute(bot: Bot, message: Message): String {
+    public fun execute(bot: Bot, message: Message, storage: VoiceStorage) {
 
-        println("User ${message.chat.id} last state is ${current}")
+        println("User ${message.chat.id} last state is $current")
 
         val result = tryToApply(bot, message, current)
 
@@ -56,18 +72,20 @@ class StateMachine {
             bot.sendMessage(ChatId.fromId(message.chat.id), "Sorry, but it is now available now!")
         } else {
             current = result.getState()
+            outputExecutor.execute(bot, result, storage)
         }
 
-        println("User ${message.chat.id} new state is ${current} ")
-
-        return result!!.getContent()
+        println("User ${message.chat.id} new state is $current ")
     }
 
     private fun tryToApply(bot: Bot, message: Message, current: State): ExecutionOutput? {
+        println("All next stages : ${configuration.getNextStates(current)}")
         for (next: State in configuration.getNextStates(current)) {
+
+            println("Current next state is $next")
             val res = configuration.getApplier(next).apply(bot, message)
 
-            if (res!!.getState() != null) {
+            if (res != null) {
                 return res
             }
         }

@@ -6,6 +6,7 @@ import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.dispatcher.message
 import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.entities.Message
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InlineQueryResult
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InputMessageContent
 import com.github.kotlintelegrambot.extensions.filters.Filter
@@ -28,11 +29,15 @@ class VoicyBot(private var TOKEN: String) {
                     val query: String = inlineQuery.query.trim()
                     if (query.isEmpty()) {
                         println("IsEmpty")
-                        val res: MutableList<InlineQueryResult.CachedVoice> = mutableListOf<InlineQueryResult.CachedVoice>()
+                        val res: MutableList<InlineQueryResult.CachedVoice> =
+                            mutableListOf<InlineQueryResult.CachedVoice>()
                         var i = 0
 
-                        for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()){
-                            res.add(i, InlineQueryResult.CachedVoice(i.toString(), voice.key.toString(), voice.value.getName()))
+                        for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()) {
+                            res.add(
+                                i,
+                                InlineQueryResult.CachedVoice(i.toString(), voice.key.toString(), voice.value.getName())
+                            )
                             i++
                         }
 
@@ -63,9 +68,11 @@ class VoicyBot(private var TOKEN: String) {
                 }
 
                 text {
-                    println("-------------")
-                    println("Handling text")
-                    users.get(message.chat.id)!!.run(bot, message)
+                    if (!message.text.toString().startsWith("/")) {
+                        println("-------------")
+                        println("Handling text")
+                        users.get(message.chat.id)!!.run(bot, message)
+                    }
                 }
 
                 message(Filter.Command) {
@@ -84,6 +91,12 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling invoice")
                     users.get(message.chat.id)!!.run(bot, message)
+                }
+
+                callbackQuery {
+                    println("-------------")
+                    println("Handling callbackQuery")
+                    users.get(callbackQuery.from.id)!!.run(bot, callbackQuery.message!!)
                 }
             }
         }
