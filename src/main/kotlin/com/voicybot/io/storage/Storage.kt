@@ -8,8 +8,8 @@ abstract class Storage<K, V> {
         storage[key] = value
     }
 
-    public fun delete(key: K, value: V): Boolean {
-        return storage.remove(key, value)
+    public fun delete(key: K): V? {
+        return storage.remove(key)
     }
 
     public fun get(key: K): V? {
