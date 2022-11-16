@@ -19,6 +19,9 @@ class OutputExecutor {
         if (output.getState() == State.DELETE_GET_VOICE)
             return deleteVoice(output, storage)
 
+        if (output.getState() == State.BACK_TO_MAIN)
+            return backToMain()
+
         if (output.getContent() != "")
             return createVoice(output, storage)
     }
@@ -61,5 +64,9 @@ class OutputExecutor {
 
             handlingVoice = Voice()
         }
+    }
+
+    private fun backToMain(){
+        handlingVoice = Voice()
     }
 }

@@ -26,37 +26,43 @@ class StateMachine {
         configuration.setUpState(
             State.START,
             Start(),
-            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
+            listOf(State.BACK_TO_MAIN, State.ADD_VOICE, State.DELETE_VOICE)
         )
 
         configuration.setUpState(
             State.ADD_VOICE,
             AddVoice(),
-            listOf(State.GET_VOICE)
+            listOf(State.BACK_TO_MAIN, State.GET_VOICE)
         )
 
         configuration.setUpState(
             State.GET_VOICE,
             GetVoice(),
-            listOf(State.CALL_VOICE)
+            listOf(State.BACK_TO_MAIN, State.CALL_VOICE)
         )
 
         configuration.setUpState(
             State.CALL_VOICE,
             CallVoice(),
-            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
+            listOf(State.BACK_TO_MAIN, State.ADD_VOICE, State.DELETE_VOICE)
         )
 
         configuration.setUpState(
             State.DELETE_VOICE,
             DeleteVoice(),
-            listOf(State.DELETE_GET_VOICE)
+            listOf(State.BACK_TO_MAIN, State.DELETE_GET_VOICE)
         )
 
         configuration.setUpState(
             State.DELETE_GET_VOICE,
             DeleteGetVoice(),
-            listOf(State.ADD_VOICE, State.DELETE_VOICE, State.TAG_VOICE)
+            listOf(State.BACK_TO_MAIN, State.ADD_VOICE, State.DELETE_VOICE)
+        )
+
+        configuration.setUpState(
+            State.BACK_TO_MAIN,
+            BackToMain(),
+            listOf(State.BACK_TO_MAIN, State.ADD_VOICE, State.DELETE_VOICE)
         )
 
 
