@@ -12,7 +12,7 @@ class OutputExecutor {
 
     private var handlingVoice = Voice()
 
-    public fun execute(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {
+    fun execute(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {
         if (output.getState() == State.DELETE_VOICE)
             return voiceList(bot, output, storage)
 
@@ -26,7 +26,7 @@ class OutputExecutor {
     private fun voiceList(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {
         val inlineKeyboardButton = mutableListOf<List<InlineKeyboardButton>>()
 
-        for ((key, value) in storage.getStorage()) {
+        for ((_, value) in storage.getStorage()) {
             inlineKeyboardButton.add(
                 listOf(
                     InlineKeyboardButton.CallbackData(
@@ -44,14 +44,10 @@ class OutputExecutor {
             text = "Your stickers : ",
             replyMarkup = inlineKeyboardMarkup
         )
-
-        // TODO delete after problem will be solved
-        for ((key, value) in storage.getStorage()) println("$key : ${value.getName()}")
     }
 
     private fun deleteVoice(output: ExecutionOutput, storage: VoiceStorage) {
         val key = storage.getKey(output.getContent())
-        println(key)
         if (key != null) {
             storage.delete(key)
         }
