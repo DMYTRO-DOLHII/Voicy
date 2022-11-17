@@ -26,12 +26,13 @@ class VoicyBot(private var TOKEN: String) {
                 inlineQuery {
                     println("-------------")
                     println("Handling inline query for user ${inlineQuery.from.id}")
+
                     val query: String = inlineQuery.query.trim()
+                    val res: MutableList<InlineQueryResult.CachedVoice> =
+                        mutableListOf<InlineQueryResult.CachedVoice>()
+                    var i = 0
+
                     if (query.isEmpty()) {
-                        println("IsEmpty")
-                        val res: MutableList<InlineQueryResult.CachedVoice> =
-                            mutableListOf<InlineQueryResult.CachedVoice>()
-                        var i = 0
 
                         for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()) {
                             res.add(
@@ -40,14 +41,25 @@ class VoicyBot(private var TOKEN: String) {
                             )
                             i++
                         }
-
-                        val result: List<InlineQueryResult.CachedVoice> = res
-
-                        bot.answerInlineQuery(inlineQuery.id, result, cacheTime = 0)
                     } else {
-                        println("Isn't Empty")
-                        bot.answerInlineQuery(inlineQuery.id, listOf())
+                        for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()) {
+                            if (voice.value.getName().contains(query)){
+                                res.add(
+                                    i,
+                                    InlineQueryResult.CachedVoice(
+                                        i.toString(),
+                                        voice.key.toString(),
+                                        voice.value.getName()
+                                    )
+                                )
+                                i++
+                            }
+                        }
                     }
+
+                    val result: List<InlineQueryResult.CachedVoice> = res
+
+                    bot.answerInlineQuery(inlineQuery.id, result, cacheTime = 0)
                 }
 
                 command("start") {
