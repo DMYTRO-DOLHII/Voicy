@@ -11,12 +11,14 @@ import com.github.kotlintelegrambot.entities.inlinequeryresults.InlineQueryResul
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InputMessageContent
 import com.github.kotlintelegrambot.extensions.filters.Filter
 import com.github.kotlintelegrambot.logging.LogLevel
+import com.voicybot.io.statemachine.StateMachine
 import com.voicybot.io.storage.UserStorage
 import okhttp3.Dispatcher
 
 class VoicyBot(private var TOKEN: String) {
 
     private var users: UserStorage = UserStorage()
+    private var machines = mutableMapOf<User, StateMachine>()
 
     public fun createBot(): Bot {
         return bot {
@@ -64,15 +66,15 @@ class VoicyBot(private var TOKEN: String) {
 
                 command("start") {
                     if (users.get(message.chat.id) == null) {
-                        users.add(
+
+                        val user = User(
                             message.chat.id,
-                            User(
-                                message.chat.id,
-                                message.chat.username.toString(),
-                                message.chat.firstName.toString(),
-                                message.chat.lastName.toString()
-                            )
+                            message.chat.username.toString(),
+                            message.chat.firstName.toString(),
+                            message.chat.lastName.toString()
                         )
+                        users.add(message.chat.id, user)
+                        machines.put(user, StateMachine())
 
                         println("User " + message.chat.id + " was added")
                     }
@@ -83,32 +85,37 @@ class VoicyBot(private var TOKEN: String) {
                     if (!message.text.toString().startsWith("/")) {
                         println("-------------")
                         println("Handling text")
-                        users.get(message.chat.id)!!.run(bot, message)
+                        val user = users.get(message.chat.id)
+                        machines.get(user)!!.execute(bot, message, user!!.getVoices())
                     }
                 }
 
                 message(Filter.Command) {
                     println("-------------")
                     println("Handling command")
-                    users.get(message.chat.id)!!.run(bot, message)
+                    val user = users.get(message.chat.id)
+                    machines.get(user)!!.execute(bot, message, user!!.getVoices())
                 }
 
                 audio {
                     println("-------------")
                     println("Handling audio")
-                    users.get(message.chat.id)!!.run(bot, message)
+                    val user = users.get(message.chat.id)
+                    machines.get(user)!!.execute(bot, message, user!!.getVoices())
                 }
 
                 voice {
                     println("-------------")
                     println("Handling invoice")
-                    users.get(message.chat.id)!!.run(bot, message)
+                    val user = users.get(message.chat.id)
+                    machines.get(user)!!.execute(bot, message, user!!.getVoices())
                 }
 
                 callbackQuery {
                     println("-------------")
                     println("Handling callbackQuery")
-                    users.get(callbackQuery.from.id)!!.run(bot, callbackQuery.message!!)
+                    val user = users.get(callbackQuery.from.id)
+                    machines.get(user)!!.execute(bot, callbackQuery.message!!, user!!.getVoices())
                 }
             }
         }

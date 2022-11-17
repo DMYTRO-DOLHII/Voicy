@@ -16,12 +16,6 @@ class User(
     private var voiceStorage: VoiceStorage = VoiceStorage()
     private var stateMachine: StateMachine = StateMachine()
 
-    private var handlingVoice = Voice()
-
-    public fun run(bot: Bot, message: Message) {
-        stateMachine.execute(bot, message, voiceStorage)
-    }
-
 
     public fun getId(): Long {
         return id
