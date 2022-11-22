@@ -14,7 +14,6 @@ class User(
 
 
     private var voiceStorage: VoiceStorage = VoiceStorage()
-    private var stateMachine: StateMachine = StateMachine()
 
 
     public fun getId(): Long {
