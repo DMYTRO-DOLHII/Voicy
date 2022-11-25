@@ -2,11 +2,10 @@ package com.voicybot.io.statemachine
 
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.ChatId
-import com.github.kotlintelegrambot.entities.Message
+import com.github.kotlintelegrambot.entities.Update
 import com.voicybot.io.statemachine.applier.*
 import com.voicybot.io.statemachine.state.State
 import com.voicybot.io.storage.VoiceStorage
-import kotlin.math.log
 
 class StateMachine {
 
@@ -68,28 +67,28 @@ class StateMachine {
 
     }
 
-    public fun execute(bot: Bot, message: Message, storage: VoiceStorage) {
+    fun execute(bot: Bot, update: Update, storage: VoiceStorage) {
 
-        println("User ${message.chat.id} last state is $current")
+        println("User ${update.message!!.chat.id} last state is $current")
 
-        val result = tryToApply(bot, message, current)
+        val result = tryToApply(bot, update, current)
 
         if (result == null) {
-            bot.sendMessage(ChatId.fromId(message.chat.id), "Sorry, but it is now available now!")
+            bot.sendMessage(ChatId.fromId(update.message!!.chat.id), "Sorry, but it is now available now!")
         } else {
             current = result.getState()
             outputExecutor.execute(bot, result, storage)
         }
 
-        println("User ${message.chat.id} new state is $current ")
+        println("User ${update.message!!.chat.id} new state is $current ")
     }
 
-    private fun tryToApply(bot: Bot, message: Message, current: State): ExecutionOutput? {
+    private fun tryToApply(bot: Bot, update: Update, current: State): ExecutionOutput? {
         println("All next stages : ${configuration.getNextStates(current)}")
         for (next: State in configuration.getNextStates(current)) {
 
             println("Current next state is $next")
-            val res = configuration.getApplier(next).apply(bot, message)
+            val res = configuration.getApplier(next).apply(bot,update)
 
             if (res != null) {
                 return res
