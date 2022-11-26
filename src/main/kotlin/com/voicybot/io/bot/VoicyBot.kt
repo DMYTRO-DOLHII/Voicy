@@ -6,6 +6,7 @@ import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InlineQueryResult
 import com.github.kotlintelegrambot.extensions.filters.Filter
+import com.voicybot.io.statemachine.Input
 import com.voicybot.io.statemachine.StateMachine
 import com.voicybot.io.storage.UserStorage
 
@@ -38,7 +39,7 @@ class VoicyBot(private var TOKEN: String) {
                         }
                     } else {
                         for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()) {
-                            if (voice.value.getName().contains(query)){
+                            if (voice.value.getName().contains(query)) {
                                 res.add(
                                     i,
                                     InlineQueryResult.CachedVoice(
@@ -79,7 +80,8 @@ class VoicyBot(private var TOKEN: String) {
                         println("-------------")
                         println("Handling text")
                         val user = users.get(message.chat.id)
-                        machines[user]!!.execute(bot, update, user!!.getVoices())
+                        val input = Input(update, update.message!!.chat.id)
+                        machines[users.get(message.chat.id)]!!.execute(bot, input, user!!.getVoices())
                     }
                 }
 
@@ -87,29 +89,32 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling command")
                     val user = users.get(message.chat.id)
-                    machines[user]!!.execute(bot, update, user!!.getVoices())
+                    val input = Input(update, update.message!!.chat.id)
+                    machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
 
                 audio {
                     println("-------------")
                     println("Handling audio")
                     val user = users.get(message.chat.id)
-                    machines[user]!!.execute(bot, update, user!!.getVoices())
+                    val input = Input(update, update.message!!.chat.id)
+                    machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
 
                 voice {
                     println("-------------")
                     println("Handling invoice")
                     val user = users.get(message.chat.id)
-                    machines[user]!!.execute(bot, update, user!!.getVoices())
+                    val input = Input(update, update.message!!.chat.id)
+                    machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
 
                 callbackQuery {
                     println("-------------")
                     println("Handling callbackQuery")
-                    println(update.message)
-//                    val user = users.get(callbackQuery.from.id)
-//                    machines[user]!!.execute(bot, update, user!!.getVoices())
+                    val user = users.get(callbackQuery.from.id)
+                    val input = Input(update, update.callbackQuery!!.from.id)
+                    machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
             }
         }

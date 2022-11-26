@@ -2,7 +2,6 @@ package com.voicybot.io.statemachine
 
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.ChatId
-import com.github.kotlintelegrambot.entities.Update
 import com.voicybot.io.statemachine.applier.*
 import com.voicybot.io.statemachine.state.State
 import com.voicybot.io.storage.VoiceStorage
@@ -49,7 +48,7 @@ class StateMachine {
         configuration.setUpState(
             State.DELETE_VOICE,
             DeleteVoice(),
-            listOf(State.BACK_TO_MAIN, State.DELETE_GET_VOICE)
+            listOf(State.DELETE_GET_VOICE, State.BACK_TO_MAIN)
         )
 
         configuration.setUpState(
@@ -67,28 +66,28 @@ class StateMachine {
 
     }
 
-    fun execute(bot: Bot, update: Update, storage: VoiceStorage) {
+    fun execute(bot: Bot, input: Input, storage: VoiceStorage) {
 
-        println("User ${update.message!!.chat.id} last state is $current")
+        println("User ${input.id()} last state is $current")
 
-        val result = tryToApply(bot, update, current)
+        val result = tryToApply(bot, input, current)
 
         if (result == null) {
-            bot.sendMessage(ChatId.fromId(update.message!!.chat.id), "Sorry, but it is now available now!")
+            bot.sendMessage(ChatId.fromId(input.id()), "Sorry, but it is now available now!")
         } else {
             current = result.getState()
             outputExecutor.execute(bot, result, storage)
         }
 
-        println("User ${update.message!!.chat.id} new state is $current ")
+        println("User ${input.id()} new state is $current ")
     }
 
-    private fun tryToApply(bot: Bot, update: Update, current: State): ExecutionOutput? {
+    private fun tryToApply(bot: Bot, input: Input, current: State): ExecutionOutput? {
         println("All next stages : ${configuration.getNextStates(current)}")
         for (next: State in configuration.getNextStates(current)) {
 
             println("Current next state is $next")
-            val res = configuration.getApplier(next).apply(bot,update)
+            val res = configuration.getApplier(next).apply(bot, input)
 
             if (res != null) {
                 return res
