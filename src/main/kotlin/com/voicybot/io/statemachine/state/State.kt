@@ -16,6 +16,8 @@ enum class State {
     DELETE_VOICE,
     DELETE_GET_VOICE,
 
+    MY_VOICES,
+
     BACK_TO_MAIN,
 
     ERROR,

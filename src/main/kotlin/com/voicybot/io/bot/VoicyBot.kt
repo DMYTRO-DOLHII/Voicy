@@ -75,6 +75,10 @@ class VoicyBot(private var TOKEN: String) {
 
                 }
 
+                command("myvoices"){
+                    print(users.get(message.from!!.id))
+                }
+
                 text {
                     if (!message.text.toString().startsWith("/")) {
                         println("-------------")

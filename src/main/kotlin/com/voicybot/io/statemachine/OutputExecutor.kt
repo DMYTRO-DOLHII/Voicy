@@ -3,6 +3,7 @@ package com.voicybot.io.statemachine
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
+import com.github.kotlintelegrambot.entities.TelegramFile
 import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
 import com.voicybot.io.bot.Voice
 import com.voicybot.io.statemachine.state.State
@@ -21,6 +22,9 @@ class OutputExecutor {
 
         if (output.getState() == State.BACK_TO_MAIN)
             return backToMain()
+
+        if (output.getState() == State.MY_VOICES)
+            return myVoices(bot, output, storage)
 
         if (output.getContent() != "")
             return createVoice(output, storage)
@@ -61,12 +65,22 @@ class OutputExecutor {
 
         if (isReady) {
             storage.add(handlingVoice.getId(), handlingVoice)
+            println(handlingVoice.getId())
 
             handlingVoice = Voice()
         }
     }
 
-    private fun backToMain(){
+    private fun backToMain() {
         handlingVoice = Voice()
+    }
+
+    private fun myVoices(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {
+        for ((_, value) in storage.getStorage())
+            bot.sendVoice(
+                ChatId.fromId(output.getContent().toLong()),
+                TelegramFile.ByFileId(value.getId()),
+                value.getName(),
+            )
     }
 }
