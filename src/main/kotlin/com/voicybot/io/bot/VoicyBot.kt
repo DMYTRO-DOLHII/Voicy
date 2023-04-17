@@ -9,6 +9,7 @@ import com.github.kotlintelegrambot.extensions.filters.Filter
 import com.voicybot.io.statemachine.Input
 import com.voicybot.io.statemachine.StateMachine
 import com.voicybot.io.storage.UserStorage
+import java.util.*
 
 class VoicyBot(private var TOKEN: String) {
 
@@ -39,7 +40,7 @@ class VoicyBot(private var TOKEN: String) {
                         }
                     } else {
                         for (voice in users.get(inlineQuery.from.id)!!.getVoices().getStorage()) {
-                            if (voice.value.getName().contains(query)) {
+                            if (voice.value.getName().lowercase(Locale.getDefault()).contains(query)) {
                                 res.add(
                                     i,
                                     InlineQueryResult.CachedVoice(
