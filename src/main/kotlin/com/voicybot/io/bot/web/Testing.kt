@@ -6,6 +6,5 @@ package com.voicybot.io.bot.web
 
 fun main() {
     val link = "https://vm.tiktok.com/ZMYWm2b1s/"
-
-    val a = TikTok.video("https://vm.tiktok.com/ZMYWm2b1s/")
+    val result = TikTok.video("https://vm.tiktok.com/ZMYWm2b1s/")
 }

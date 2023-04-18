@@ -15,7 +15,7 @@ repositories {
 dependencies {
     // Web Scraping
     implementation("org.jsoup:jsoup:1.14.1")
-    implementation("org.seleniumhq.selenium:selenium-java:4.1.0")
+    implementation("org.bytedeco:javacv-platform:1.5.6")
     testImplementation(kotlin("test"))
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.0.7")
     implementation("com.google.firebase:firebase-admin:9.1.0")
