@@ -3,6 +3,8 @@ package com.voicybot.io.statemachine.applier
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Message
+import com.github.kotlintelegrambot.entities.files.Audio
+import com.github.kotlintelegrambot.extensions.filters.Filter
 import com.voicybot.io.bot.web.TikTok
 import com.voicybot.io.statemachine.ExecutionOutput
 import com.voicybot.io.statemachine.Input
@@ -11,17 +13,26 @@ import org.bytedeco.ffmpeg.global.avcodec
 import org.bytedeco.javacv.FFmpegFrameGrabber
 import org.bytedeco.javacv.FFmpegFrameRecorder
 import org.bytedeco.javacv.Frame
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.InputStream
+import java.net.URL
 
 class GetVoice : Applier {
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
         if (input.update().message!!.audio != null) {
+            val message: Message = bot.sendVoice(
+                ChatId.fromId(input.id()),
+                toVoice(saveAudioAsInputStream(bot, input.update().message!!.audio!!))
+            ).first!!.body()!!.result!!
+
             bot.sendMessage(
                 ChatId.fromId(input.id()),
                 "Great! Now, How would you like to name your sticker?"
             )
-            return ExecutionOutput(State.GET_VOICE, input.update().message!!.audio!!.fileId)
+
+            return ExecutionOutput(State.GET_VOICE, message.voice!!.fileId)
         }
 
         if (input.update().message!!.voice != null) {
@@ -32,9 +43,12 @@ class GetVoice : Applier {
             return ExecutionOutput(State.GET_VOICE, input.update().message!!.voice!!.fileId)
         }
 
-        if (isTikTok(input.update().message!!.text!!)){
+        if (isTikTok(input.update().message!!.text!!)) {
             bot.sendMessage(ChatId.fromId(input.id()), "Handling...")
-            val message: Message = bot.sendVoice(ChatId.fromId(input.id()), toVoice(TikTok.video(input.update().message!!.text!!))).first!!.body()!!.result!!
+            val message: Message = bot.sendVoice(
+                ChatId.fromId(input.id()),
+                toVoice(TikTok.video(input.update().message!!.text!!))
+            ).first!!.body()!!.result!!
             bot.sendMessage(
                 ChatId.fromId(input.id()),
                 "Great! Now, How would you like to name your sticker?"
@@ -47,17 +61,21 @@ class GetVoice : Applier {
         return null
     }
 
+    private fun saveAudioAsInputStream(bot: Bot, audio: Audio): ByteArrayInputStream {
+        return ByteArrayInputStream(bot.downloadFileBytes(audio.fileId))
+    }
 
-    private fun isTikTok(link: String) : Boolean{
+
+    private fun isTikTok(link: String): Boolean {
         return (link.contains("vm.tiktok.com") || link.contains("www.tiktok.com"))
     }
 
-    private fun isYouTube(link: String) : Boolean{
+    private fun isYouTube(link: String): Boolean {
         return false
     }
 
 
-    private fun toVoice(audio: InputStream): ByteArray{
+    private fun toVoice(audio: InputStream): ByteArray {
         val output = ByteArrayOutputStream()
         val recorder = FFmpegFrameRecorder(output, 2)
         recorder.setAudioOption("crf", "0")
