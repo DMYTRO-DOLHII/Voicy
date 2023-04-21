@@ -15,7 +15,13 @@ repositories {
 dependencies {
     // Web Scraping
     implementation("org.jsoup:jsoup:1.14.1")
+
+    // FFmpeg converter
     implementation("org.bytedeco:javacv-platform:1.5.6")
+
+    // JSON
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+")
+
     testImplementation(kotlin("test"))
     implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.0.7")
     implementation("com.google.firebase:firebase-admin:9.1.0")
