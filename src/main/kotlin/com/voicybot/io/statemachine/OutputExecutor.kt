@@ -26,7 +26,7 @@ class OutputExecutor {
         if (output.getState() == State.MY_VOICES)
             return myVoices(bot, output, storage)
 
-        if (output.getContent() != "")
+        if (output.getState() == State.GET_VOICE || output.getState() == State.CALL_VOICE)
             return createVoice(output, storage)
     }
 
@@ -82,5 +82,9 @@ class OutputExecutor {
                 TelegramFile.ByFileId(value.getId()),
                 value.getName(),
             )
+    }
+
+    private fun tiktokToVoice(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {
+
     }
 }
