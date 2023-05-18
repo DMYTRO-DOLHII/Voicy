@@ -13,6 +13,7 @@ class CallVoice : Applier {
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
         if (input.update().message!!.text != null) {
 
+            // TODO: bot crashes when user uses @botname, if was entered the name, that already exist
             if (names.contains(input.update().message!!.text.toString())) {
                 bot.sendMessage(ChatId.fromId(input.id()),
                     "Sorry, but you already have a voice with the same name..." +
