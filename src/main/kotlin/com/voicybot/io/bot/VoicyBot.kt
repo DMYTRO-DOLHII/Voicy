@@ -16,8 +16,6 @@ class VoicyBot(private var TOKEN: String) {
     private var users: UserStorage = UserStorage()
     private var machines = mutableMapOf<User, StateMachine>()
 
-    // TODO : @dmytro.dolhii add payment
-
     fun createBot(): Bot {
         return bot {
             token = TOKEN

@@ -4,7 +4,6 @@ import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Message
 import com.github.kotlintelegrambot.entities.files.Audio
-import com.github.kotlintelegrambot.extensions.filters.Filter
 import com.voicybot.io.bot.web.TikTok
 import com.voicybot.io.bot.web.YouTube
 import com.voicybot.io.statemachine.ExecutionOutput
@@ -16,13 +15,9 @@ import org.bytedeco.javacv.FFmpegFrameRecorder
 import org.bytedeco.javacv.Frame
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.InputStream
-import java.net.URL
 
 class GetVoice : Applier {
-    // TODO : @dmytro.dolhii - add limitation to voice amount for each user
-    // TODO : @dmytro.dolhii - add ability to buy stickers
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
         if (input.update().message!!.audio != null) {
             val message: Message = bot.sendVoice(
