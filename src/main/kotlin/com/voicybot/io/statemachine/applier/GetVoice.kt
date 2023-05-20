@@ -4,8 +4,8 @@ import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Message
 import com.github.kotlintelegrambot.entities.files.Audio
-import com.github.kotlintelegrambot.extensions.filters.Filter
 import com.voicybot.io.bot.web.TikTok
+import com.voicybot.io.bot.web.YouTube
 import com.voicybot.io.statemachine.ExecutionOutput
 import com.voicybot.io.statemachine.Input
 import com.voicybot.io.statemachine.state.State
@@ -15,9 +15,7 @@ import org.bytedeco.javacv.FFmpegFrameRecorder
 import org.bytedeco.javacv.Frame
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.InputStream
-import java.net.URL
 
 class GetVoice : Applier {
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
@@ -57,6 +55,21 @@ class GetVoice : Applier {
             return ExecutionOutput(State.GET_VOICE, message.voice!!.fileId)
         }
 
+        if (isYouTube(input.update().message!!.text!!)) {
+            bot.sendMessage(ChatId.fromId(input.id()), "Handling...")
+            val message: Message = bot.sendVoice(
+                ChatId.fromId(input.id()),
+                toVoice(YouTube.downloadVideo(input.update().message!!.text!!))
+            ).first!!.body()!!.result!!
+
+            bot.sendMessage(
+                ChatId.fromId(input.id()),
+                "Great! Now, How would you like to name your sticker?"
+            )
+
+            return ExecutionOutput(State.GET_VOICE, message.voice!!.fileId)
+        }
+
 
         return null
     }
@@ -71,7 +84,7 @@ class GetVoice : Applier {
     }
 
     private fun isYouTube(link: String): Boolean {
-        return false
+        return (link.contains("youtube.com")) || link.contains("youtu.be")
     }
 
 

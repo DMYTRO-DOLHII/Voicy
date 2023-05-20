@@ -54,6 +54,7 @@ class OutputExecutor {
     }
 
     private fun deleteVoice(output: ExecutionOutput, storage: VoiceStorage) {
+        println("TRYING TO DELETE VOICE")
         val key = storage.getKey(output.getContent())
         if (key != null) {
             storage.delete(key)
@@ -61,6 +62,8 @@ class OutputExecutor {
     }
 
     private fun createVoice(output: ExecutionOutput, storage: VoiceStorage) {
+        if (output.getContent().isEmpty()) return
+
         val isReady = handlingVoice.prepare(output.getContent())
 
         if (isReady) {
@@ -84,7 +87,4 @@ class OutputExecutor {
             )
     }
 
-    private fun tiktokToVoice(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {
-
-    }
 }

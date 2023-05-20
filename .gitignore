@@ -76,3 +76,8 @@ outTmp/
 kotlin-ide/
 
 *.json
+
+
+# PYTHON
+
+venv
