@@ -30,7 +30,7 @@ class StateMachine {
         configuration.setUpState(
             State.ADD_VOICE,
             AddVoice(),
-            listOf(State.BACK_TO_MAIN, State.GET_VOICE)
+            listOf(State.BACK_TO_MAIN, State.GET_VOICE, State.STAY)
         )
 
         configuration.setUpState(

@@ -28,6 +28,10 @@ class OutputExecutor {
 
         if (output.getState() == State.GET_VOICE || output.getState() == State.CALL_VOICE)
             return createVoice(output, storage)
+
+        if (output.getState() == State.STAY) {
+            return
+        }
     }
 
     private fun voiceList(bot: Bot, output: ExecutionOutput, storage: VoiceStorage) {

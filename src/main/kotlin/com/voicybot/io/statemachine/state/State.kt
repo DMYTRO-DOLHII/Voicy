@@ -21,6 +21,7 @@ enum class State {
     BACK_TO_MAIN,
 
     ERROR,
+    STAY,
 
     EXECUTION_END
 }

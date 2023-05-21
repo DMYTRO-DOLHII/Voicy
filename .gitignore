@@ -77,7 +77,8 @@ kotlin-ide/
 
 *.json
 
-
-# PYTHON
+*.mp4
+*.mp3
 
 venv
+.idea/*

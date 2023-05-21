@@ -19,6 +19,9 @@ class CallVoice : Applier {
                 return ExecutionOutput(State.GET_VOICE, "")
             }
             bot.sendMessage(ChatId.fromId(input.id()), "Now your sticker has name : ${input.update().message!!.text.toString()}")
+            input.user().getVoices().newVoice()
+            bot.sendMessage(ChatId.fromId(input.id()), "You have created ${input.user().getVoices().getUsed()} of " +
+                    "${input.user().getVoices().getMaximum()} stickers")
             names.add(input.update().message!!.text.toString())
             return ExecutionOutput(State.CALL_VOICE, input.update().message!!.text.toString())
         }

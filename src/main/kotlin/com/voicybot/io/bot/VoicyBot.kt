@@ -85,7 +85,7 @@ class VoicyBot(private var TOKEN: String) {
                         println("-------------")
                         println("Handling text")
                         val user = users.get(message.chat.id)
-                        val input = Input(update, update.message!!.chat.id)
+                        val input = Input(update, update.message!!.chat.id, user!!)
                         machines[users.get(message.chat.id)]!!.execute(bot, input, user!!.getVoices())
                     }
                 }
@@ -94,7 +94,7 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling command")
                     val user = users.get(message.chat.id)
-                    val input = Input(update, update.message!!.chat.id)
+                    val input = Input(update, update.message!!.chat.id, user!!)
                     machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
 
@@ -102,7 +102,7 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling audio")
                     val user = users.get(message.chat.id)
-                    val input = Input(update, update.message!!.chat.id)
+                    val input = Input(update, update.message!!.chat.id, user!!)
                     machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
 
@@ -110,7 +110,7 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling invoice")
                     val user = users.get(message.chat.id)
-                    val input = Input(update, update.message!!.chat.id)
+                    val input = Input(update, update.message!!.chat.id, user!!)
                     machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
 
@@ -118,7 +118,7 @@ class VoicyBot(private var TOKEN: String) {
                     println("-------------")
                     println("Handling callbackQuery")
                     val user = users.get(callbackQuery.from.id)
-                    val input = Input(update, update.callbackQuery!!.from.id)
+                    val input = Input(update, update.callbackQuery!!.from.id, user!!)
                     machines[user]!!.execute(bot, input, user!!.getVoices())
                 }
             }
