@@ -4,17 +4,26 @@ import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.*
+import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.entities.SuccessfulPayment
 import com.github.kotlintelegrambot.entities.inlinequeryresults.InlineQueryResult
+import com.github.kotlintelegrambot.entities.payments.InvoicePhotoDetail
+import com.github.kotlintelegrambot.entities.payments.LabeledPrice
+import com.github.kotlintelegrambot.entities.payments.PaymentInvoiceInfo
 import com.github.kotlintelegrambot.extensions.filters.Filter
 import com.voicybot.io.statemachine.Input
 import com.voicybot.io.statemachine.StateMachine
 import com.voicybot.io.storage.UserStorage
+import java.math.BigInteger
+import java.sql.Types
 import java.util.*
 
 class VoicyBot(private var TOKEN: String) {
 
     private var users: UserStorage = UserStorage()
     private var machines = mutableMapOf<User, StateMachine>()
+
+    private var TEST_STRIPE_TOKEN = "284685063:TEST:NWJmNDFhYmFmNTUz"
 
     fun createBot(): Bot {
         return bot {
@@ -76,8 +85,8 @@ class VoicyBot(private var TOKEN: String) {
 
                 }
 
-                command("myvoices"){
-                    print(users.get(message.from!!.id))
+                command("myvoices") {
+                    println(users.get(message.from!!.id))
                 }
 
                 text {
@@ -120,6 +129,47 @@ class VoicyBot(private var TOKEN: String) {
                     val user = users.get(callbackQuery.from.id)
                     val input = Input(update, update.callbackQuery!!.from.id, user!!)
                     machines[user]!!.execute(bot, input, user!!.getVoices())
+                }
+
+
+                // BUY NEW SLOTS PAYMENT
+                command("buyslots") {
+                    bot.sendMessage(ChatId.fromId(update.message!!.chat.id), "Testing payment!")
+                    bot.sendInvoice(
+                        ChatId.fromId(update.message!!.chat.id),
+                        paymentInvoiceInfo = PaymentInvoiceInfo(
+                            title = "Buy new slots",
+                            description = "Do you want to buy new slots for stickers? Then click 'Pay' and buy 10 extra slots just now!",
+                            providerToken = TEST_STRIPE_TOKEN,
+                            currency = "EUR",
+                            prices = mutableListOf<LabeledPrice>(
+                                LabeledPrice(
+                                    label = "10 SLOTS",
+                                    amount = "500".toBigInteger()
+                                )
+                            ),
+                            startParameter = "new-slots",
+                            payload = "test-invoice-payload",
+                            invoicePhoto = InvoicePhotoDetail(
+                                photoUrl = "https://img.freepik.com/premium-vector/voice-assistant-sticker-ai-personal-assistant-voice-recognition-icon-microphone-with-soundwave-vector-isolated-background-eps-10_399089-2054.jpg?w=2000",
+                                photoHeight = 1000,
+                                photoWidth = 1000
+                            )
+                        )
+                    )
+                }
+
+                preCheckoutQuery {
+                    bot.answerPreCheckoutQuery(preCheckoutQuery.id, ok = true)
+
+                }
+
+                message {
+                    if (update.message!!.successfulPayment != null) {
+                        users.get(update.message!!.chat.id)!!.getVoices().newLimit()
+                        bot.sendMessage(ChatId.fromId(update.message!!.chat.id), "You have successfully bought new slots!" +
+                                "\nNow you can create up to ${users.get(update.message!!.chat.id)!!.getVoices().getMaximum()} stickers :)")
+                    }
                 }
             }
         }

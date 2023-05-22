@@ -4,7 +4,7 @@ import com.voicybot.io.bot.Voice
 
 class VoiceStorage : Storage<String, Voice>() {
 
-    private var maximum = 1
+    private var maximum = 10
     private var used = 0
 
 
@@ -29,8 +29,8 @@ class VoiceStorage : Storage<String, Voice>() {
         used--
     }
 
-    fun newLimit( newMax: Int){
-        maximum = newMax
+    fun newLimit(){
+        maximum += 10
     }
 
     fun getUsed(): Int{
