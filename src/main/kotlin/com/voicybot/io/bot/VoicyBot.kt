@@ -167,12 +167,15 @@ class VoicyBot(private var TOKEN: String) {
                 message {
                     if (update.message!!.successfulPayment != null) {
                         users.get(update.message!!.chat.id)!!.getVoices().newLimit()
-                        bot.sendMessage(ChatId.fromId(update.message!!.chat.id), "You have successfully bought new slots!" +
-                                "\nNow you can create up to ${users.get(update.message!!.chat.id)!!.getVoices().getMaximum()} stickers :)")
+                        bot.sendMessage(
+                            ChatId.fromId(update.message!!.chat.id), "You have successfully bought new slots!" +
+                                    "\nNow you can create up to ${
+                                        users.get(update.message!!.chat.id)!!.getVoices().getMaximum()
+                                    } stickers :)"
+                        )
                     }
                 }
             }
         }
     }
-
 }
