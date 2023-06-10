@@ -8,7 +8,7 @@ import com.voicybot.io.statemachine.state.State
 
 class BackToMain : Applier {
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
-        if (input.update().message!!.text == "/backtomain"){
+        if (input.update().message!!.text == "/main"){
             bot.sendMessage(ChatId.fromId(input.id()), "Hello there!\nYou have returned to start position, " +
                     "use commands to do something via me!")
 

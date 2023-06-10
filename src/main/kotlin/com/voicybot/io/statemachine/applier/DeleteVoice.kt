@@ -9,7 +9,7 @@ import com.voicybot.io.statemachine.state.State
 class DeleteVoice : Applier {
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
         // TODO : bot crushes when trying to delete sticker
-        if(input.update().message!!.text.toString() == "/deletevoice"){
+        if(input.update().message!!.text.toString() == "/delete"){
             bot.sendMessage(ChatId.fromId(input.id()), "Select the button with voice name," +
                     "that you would like to delete")
 

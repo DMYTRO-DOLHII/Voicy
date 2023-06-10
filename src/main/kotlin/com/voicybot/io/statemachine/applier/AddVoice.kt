@@ -8,7 +8,7 @@ import com.voicybot.io.statemachine.state.State
 
 class AddVoice : Applier {
     override fun apply(bot: Bot, input: Input): ExecutionOutput? {
-        if (input.update().message!!.text.toString() == "/addvoice") {
+        if (input.update().message!!.text.toString() == "/create") {
 
             if (!input.user().getVoices().limitReached()) {
                 bot.sendMessage(ChatId.fromId(input.id()), "Sorry, but you have reached the maximum amount of " +

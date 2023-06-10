@@ -18,9 +18,9 @@ class CallVoice : Applier {
                             " Try another name")
                 return ExecutionOutput(State.GET_VOICE, "")
             }
-            bot.sendMessage(ChatId.fromId(input.id()), "Now your sticker has name : ${input.update().message!!.text.toString()}")
+            bot.sendMessage(ChatId.fromId(input.id()), "Now your sticker has a name : ${input.update().message!!.text.toString()}")
             input.user().getVoices().newVoice()
-            bot.sendMessage(ChatId.fromId(input.id()), "You have created ${input.user().getVoices().getUsed()} of " +
+            bot.sendMessage(ChatId.fromId(input.id()), "You have created ${input.user().getVoices().getUsed()} out of " +
                     "${input.user().getVoices().getMaximum()} stickers")
             names.add(input.update().message!!.text.toString())
             return ExecutionOutput(State.CALL_VOICE, input.update().message!!.text.toString())

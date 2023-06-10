@@ -12,9 +12,10 @@ class Start : Applier {
             bot.sendMessage(ChatId.fromId(input.id()), "Hello there!\nMy name is Voicy. I can guide you in " +
                     "voice sticker creation. Just use commands below and follow further instructions.\n" +
                     "/start - See starting instruction\n" +
-                    "/addvoice - Start voice sticker creation\n" +
-                    "/deletevoice - Delete sticker\n" +
-                    "/backtomain - Return to the main menu\n\n" +
+                    "/create - Start voice sticker creation\n" +
+                    "/delete - Delete sticker\n" +
+                    "/buyslots - Buy new slots to create and use more stickers\n" +
+                    "/main - Return to the main menu\n\n" +
                     "Use @VoicySticker_bot to see and use your stickers.\nEnjoy!")
 
             return ExecutionOutput(State.START, "")
