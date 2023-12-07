@@ -26,5 +26,8 @@ Make sure you have the following installed:
    git clone https://github.com/yourusername/voicestickerbot.git
    cd voicestickerbot
    ```
-
-   
+2. Replace Bot TOKEN in BotExecutor.kt
+   ```Kotlin
+   val token = "YOUR_TOKEN"
+   ```
+3. Build and Start project
